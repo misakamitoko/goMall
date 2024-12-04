@@ -4,10 +4,10 @@ import "github.com/zeromicro/go-zero/zrpc"
 
 type Config struct {
 	zrpc.RpcServerConf
-	Auth Auth `json:"auth"`
+	Jwt Jwt `json:"jwt"`
 }
 
-type Auth struct {
+type Jwt struct {
 	SecretKey string
 	Expire    int64
 }

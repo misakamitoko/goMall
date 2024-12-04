@@ -26,10 +26,9 @@ func NewDeliverTokenByRPCLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *DeliverTokenByRPCLogic) DeliverTokenByRPC(in *auth.DeliverTokenReq) (*auth.DeliveryResp, error) {
-	// todo: add your logic here and delete this line
 	userId := in.UserId
-	secretKey := l.svcCtx.Config.Auth.SecretKey
-	expire := l.svcCtx.Config.Auth.Expire
+	secretKey := l.svcCtx.Config.Jwt.SecretKey
+	expire := l.svcCtx.Config.Jwt.Expire
 	token, err := biz.GetJwtToken(secretKey, time.Now().Unix(), expire, userId)
 	if err != nil {
 		l.Logger.Error("get jwt token failed", err)

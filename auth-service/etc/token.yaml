@@ -1,0 +1,10 @@
+Name: token.rpc
+ListenOn: 0.0.0.0:8080
+Mode: dev
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: token.rpc
+jwt:
+  SecretKey: "huangjunde233"
+  Expire: 3600
