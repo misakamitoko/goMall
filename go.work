@@ -1,0 +1,6 @@
+go 1.22.10
+
+use (
+	./auth-service
+	./user-service
+)
