@@ -13,9 +13,11 @@ type LoginResp struct {
 }
 
 type RegisterReq struct {
-	Name   string `json:"name"`
-	Gender int64  `json:"gender"`
-	Mobile string `json:"mobile"`
+	Name   		string `json:"name"`
+	Gender 		int64  `json:"gender"`
+	Mobile 		string `json:"mobile,optional"`
+	Password 	string `json:"password"`
+	Email 		string `json:"email"`
 }
 
 type RegisterResp struct {

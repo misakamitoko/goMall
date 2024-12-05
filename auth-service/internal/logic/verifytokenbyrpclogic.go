@@ -25,7 +25,6 @@ func NewVerifyTokenByRPCLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *VerifyTokenByRPCLogic) VerifyTokenByRPC(in *auth.VerifyTokenReq) (*auth.VerifyResp, error) {
-	// todo: add your logic here and delete this line
 	token := in.Token
 	secretKey := l.svcCtx.Config.Jwt.SecretKey
 	ok := biz.ParseJwt(token, secretKey)

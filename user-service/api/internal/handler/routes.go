@@ -4,8 +4,8 @@
 package handler
 
 import (
+	"context"
 	"net/http"
-
 	"user-service/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -36,5 +36,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		
 	)
+	//server.Use(middleware)
+}
+
+
+func middleware(next http.HandlerFunc) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), "token", r.Header.Get("Authorization"))
+		r = r.WithContext(ctx)
+		next(w, r)
+	}
 }
