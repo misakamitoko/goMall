@@ -13,9 +13,16 @@ type Config struct {
 	}
 	DB          DB              `json:"DB"`
 	RedisConfig redis.RedisConf `json:"RedisConfig"`
+	EtcdConfig  EtcdConfig      `json:"Etcd"`
 }
 
 type DB struct {
 	DSN            string `json:"dsn"`
 	ConnectTimeout int64  `json:"connectTimeout"`
+}
+
+type EtcdConfig struct {
+	Hosts       []string
+	Key         string
+	DialTimeout uint32
 }

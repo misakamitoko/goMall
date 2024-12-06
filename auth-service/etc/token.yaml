@@ -1,5 +1,5 @@
 Name: token.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: 0.0.0.0:8083
 Mode: dev
 Etcd:
   Hosts:

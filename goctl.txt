@@ -1,0 +1,1 @@
+goctl rpc protoc greet.proto --go_out=./grpc-server  --go-grpc_out=./grpc-server  --zrpc_out=./grpc-server

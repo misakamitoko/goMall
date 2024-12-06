@@ -8,7 +8,7 @@ import (
 )
 
 func GenerateId() (int64, error) {
-	// 定义 10^16 的最大值，用于生成随机数
+	// 定义 10^8 的最大值，用于生成随机数
 	max := new(big.Int).Exp(big.NewInt(10), big.NewInt(8), nil)
 
 	// 使用安全随机数生成器生成一个随机数

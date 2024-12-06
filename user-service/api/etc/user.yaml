@@ -13,3 +13,8 @@ RedisConfig:
   NonBlock: false
   Tls: false
   PingTimeout: 1s
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: user-api
+  DialTimeout: 5
