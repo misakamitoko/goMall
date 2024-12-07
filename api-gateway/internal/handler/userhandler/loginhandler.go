@@ -11,16 +11,17 @@ import (
 )
 
 func LoginHandler(svcCtx *svc.ServiceContext, c context.Context) routing.Handler {
-	etcdClient := service.NewEtcdService(c, svcCtx)
+	etcdClient := service.NewEtcdService(c, svcCtx, "user-api")
+	etcdClient.DisCoveryService()
 	return func(ctx *routing.Context) error {
-		endpoints := etcdClient.GetByParent("user-api")
+		endpoint := etcdClient.GetOneNodeByParent()
 		client := &fasthttp.Client{}
 
 		// 构造请求
 		req := fasthttp.AcquireRequest()
 		defer fasthttp.ReleaseRequest(req)
 
-		req.SetRequestURI("http://" + endpoints[1] + "/api/user/login")
+		req.SetRequestURI("http://" + endpoint + "/api/user/login")
 		req.Header.SetMethod("POST")
 		req.Header.SetContentType("application/json") // 设置请求体类型
 		req.SetBody(ctx.Request.Body())

@@ -28,7 +28,7 @@ func main() {
 	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
 
 	r := register.NewRegister(&c)
-	r.CreateKeyWithParent()
+	go r.CreateKeyWithParent()
 
 	go func() {
 		sig := <-sigs
