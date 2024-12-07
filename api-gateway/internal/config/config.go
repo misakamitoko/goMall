@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	EtcdConfig EtcdConfig `yaml:"Etcd"`
+	Port       int        `yaml:"Port"`
 }
 
 type EtcdConfig struct {

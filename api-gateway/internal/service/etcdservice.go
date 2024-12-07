@@ -3,12 +3,12 @@ package service
 import (
 	"api-gateway/internal/svc"
 	"context"
-	"fmt"
 	"log"
 	"sync"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
+	"go.uber.org/zap"
 )
 
 type EtcdService struct {
@@ -21,8 +21,13 @@ type EtcdService struct {
 var (
 	serviceMap map[string]*EtcdService
 	// lock Services before write or read
-	mu sync.Mutex
+	mu     sync.Mutex
+	logger *zap.Logger
 )
+
+func InitLogger() {
+	logger, _ = zap.NewProduction()
+}
 
 func NewEtcdService(c context.Context, l *svc.ServiceContext, key string) *EtcdService {
 	if serviceMap[key] != nil {
@@ -40,6 +45,9 @@ func (e *EtcdService) GetOneNodeByParent() string {
 	mu.Lock()
 	defer mu.Unlock()
 	if len(e.Services) == 0 {
+		logger.Error(
+			"Discovrey service first",
+		)
 		log.Fatalf("Discovery service first!")
 	}
 	// TODO loadbalance
@@ -51,7 +59,10 @@ func (e *EtcdService) GetOneNodeByParent() string {
 }
 
 func (e *EtcdService) Watch() {
-	fmt.Println("start watch service")
+	logger.Info(
+		"start watch service at",
+		zap.Int("port", e.l.Config.Port),
+	)
 	watchChan := e.l.EtcdClient.Watch(e.ctx, e.Key, clientv3.WithPrefix())
 	for {
 		select {
@@ -75,10 +86,14 @@ func (e *EtcdService) Watch() {
 				childValue := string(ev.Kv.Value)
 				switch ev.Type {
 				case mvccpb.PUT:
-					log.Printf("etcd watch update service %s", childKey)
+					logger.Info(
+						"etcd watch update service",
+					)
 					e.updateService(childKey, childValue)
 				case mvccpb.DELETE:
-					log.Printf("etcd watch delete service %s", childKey)
+					logger.Info(
+						"etcd watch delete service",
+					)
 					e.deleteService(childKey)
 				}
 			}
@@ -103,8 +118,12 @@ func (e *EtcdService) Close() {
 }
 
 func (e *EtcdService) DisCoveryService() error {
+	InitLogger()
 	if serviceMap[e.Key] != nil {
-		log.Println("service already exist")
+		logger.Info(
+			"service start at",
+			zap.Int("port", e.l.Config.Port),
+		)
 		return nil
 	}
 	resp, err := e.l.EtcdClient.Get(e.ctx, e.Key, clientv3.WithPrefix())
