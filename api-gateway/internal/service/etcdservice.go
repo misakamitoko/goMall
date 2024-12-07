@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"sync"
-	"time"
 
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -53,11 +52,7 @@ func (e *EtcdService) GetOneNodeByParent() string {
 
 func (e *EtcdService) Watch() {
 	fmt.Println("start watch service")
-	client, _ := clientv3.New(clientv3.Config{
-		Endpoints:   []string{"127.0.0.1:2379"},
-		DialTimeout: time.Duration(5) * time.Second,
-	})
-	watchChan := client.Watch(e.ctx, "user-api/", clientv3.WithPrefix())
+	watchChan := e.l.EtcdClient.Watch(e.ctx, e.Key, clientv3.WithPrefix())
 	for {
 		select {
 		case <-e.ctx.Done():
@@ -112,7 +107,6 @@ func (e *EtcdService) DisCoveryService() error {
 		log.Println("service already exist")
 		return nil
 	}
-	defer e.Close()
 	resp, err := e.l.EtcdClient.Get(e.ctx, e.Key, clientv3.WithPrefix())
 	if err != nil {
 		return err
