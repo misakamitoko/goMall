@@ -33,24 +33,32 @@ func NewEtcdService(c context.Context, l *svc.ServiceContext, key string) *EtcdS
 	if serviceMap[key] != nil {
 		return serviceMap[key]
 	}
-	return &EtcdService{
+	eService := &EtcdService{
 		l:        l,
 		ctx:      c,
 		Key:      key,
 		Services: make(map[string]string),
 	}
+	eService.DisCoveryService()
+	serviceMap[key] = eService
+	return eService
 }
 
-func (e *EtcdService) GetOneNodeByParent() string {
-	mu.Lock()
-	defer mu.Unlock()
-	if len(e.Services) == 0 {
+func GetOneNodeByParent(serviceName string) string {
+	if serviceMap[serviceName] == nil {
 		logger.Error(
 			"Discovrey service first",
 		)
-		log.Fatalf("Discovery service first!")
+		return ""
 	}
 	// TODO loadbalance
+	e := serviceMap[serviceName]
+	if e.Services == nil {
+		logger.Error(
+			"no service available",
+			zap.String("serviceName", serviceName),
+		)
+	}
 	var endpoint string
 	for _, v := range e.Services {
 		endpoint = v
@@ -134,5 +142,9 @@ func (e *EtcdService) DisCoveryService() error {
 		e.Services[string(kv.Key)] = string(kv.Value)
 	}
 	go e.Watch()
+	if serviceMap == nil {
+		serviceMap = make(map[string]*EtcdService)
+	}
+	serviceMap[e.Key] = e
 	return nil
 }

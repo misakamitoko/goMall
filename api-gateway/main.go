@@ -3,18 +3,17 @@ package main
 import (
 	"api-gateway/internal/config"
 	"api-gateway/internal/svc"
-	"context"
+	"fmt"
 
-	routing "github.com/qiangxue/fasthttp-routing"
 	"github.com/valyala/fasthttp"
 )
 
 func main() {
 	var conf config.Config
 	config.LoadConfig(&conf, "etc/config.yaml")
+	fmt.Println(conf.Routes)
 	ctx := svc.NewServiceContext(conf)
-	router := routing.New()
-
-	Route(router, ctx, context.Background())
-	fasthttp.ListenAndServe(":8080", router.HandleRequest)
+	gateway := NewGateWay(&conf, ctx)
+	gateway.DiscoveryAllService()
+	fasthttp.ListenAndServe(":8080", gateway.ServeHttp)
 }

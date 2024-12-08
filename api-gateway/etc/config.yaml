@@ -3,3 +3,9 @@ Etcd:
   - 127.0.0.1:2379
   DialTimeout: 5
 Port: 8080
+Routes:
+  - ServiceName: user-api 
+    Path:
+      - /api/user/login
+      - /api/user/register
+        

@@ -10,11 +10,17 @@ import (
 type Config struct {
 	EtcdConfig EtcdConfig `yaml:"Etcd"`
 	Port       int        `yaml:"Port"`
+	Routes     []Route    `yaml:"Routes"`
 }
 
 type EtcdConfig struct {
 	Hosts       []string `yaml:"Hosts"`
 	DialTimeout uint32   `yaml:"DialTimeout"`
+}
+
+type Route struct {
+	ServiceName string   `yaml:"ServiceName"`
+	Path        []string `yaml:"Path"`
 }
 
 func LoadConfig(config *Config, path string) {
