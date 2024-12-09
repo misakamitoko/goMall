@@ -1,0 +1,49 @@
+type (
+	// 按页查询商品
+	ListProductReq {
+		page     int32 `json:"page"`
+		pageSize int32 `json:"pageSize"`
+	}
+	//商品信息
+	Product {
+		id          int64    `json:"id"`
+		name        string   `json:"name"`
+		description string   `json:"description"`
+		picture     string   `json:"picture"`
+		price       float64  `json:"price"`
+		category    []string `json:"category"`
+	}
+	// 按页返回商品信息
+	ListProductResp {
+		total    int32     `json:"total"`
+		products []Product `json:"products"`
+	}
+	// 查询商品信息
+	GetProductReq {
+		id int64 `json:"id"`
+	}
+	// 返回商品信息
+	GetProductResp {
+		product Product `json:"product"`
+	}
+	// 搜索商品
+	SearchProductReq {
+		query string `json:"query"`
+	}
+	// 返回搜索的商品信息
+	SearchProductResp {
+		products []Product `json:"products"`
+	}
+)
+
+service Product {
+	@handler ListProducts
+	post /api/product/list (ListProductReq) returns (ListProductResp)
+
+	@handler GetProduct
+	post /api/product/get (GetProductReq) returns (GetProductResp)
+
+	@handler SearchProduct
+	post /api/product/search (SearchProductReq) returns (SearchProductResp)
+}
+
