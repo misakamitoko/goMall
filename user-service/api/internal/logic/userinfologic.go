@@ -28,7 +28,6 @@ func NewUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserInfo
 }
 
 func (l *UserInfoLogic) UserInfo() (resp *types.UserInfoResponse, err error) {
-	// todo: add your logic here and delete this line
 	userId := l.ctx.Value("userId").(json.Number)
 
 	userModel := model.NewGomallUserModel(l.svcCtx.Conn)

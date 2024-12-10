@@ -26,8 +26,17 @@ func NewGetProductLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPro
 }
 
 func (l *GetProductLogic) GetProduct(req *types.GetProductReq) (resp *types.GetProductResp, err error) {
+	id := uint64(req.Id)
+	var val string
+	key := l.svcCtx.Config.RedisPrefix + "product:" + string(id)
+	// 先查询是否在redis中
+	val, err = l.svcCtx.RedisClient.Get(key)
+	if val != "" {
+		json.Unmarshal([]byte(val), &resp)
+		return
+	}
 	productModel := model.NewProductModel(*l.svcCtx.Conn)
-	product, err := productModel.FindOne(context.Background(), uint64(req.Id))
+	product, err := productModel.FindOne(context.Background(), id)
 	if err != nil {
 		return nil, err
 	}
@@ -45,5 +54,8 @@ func (l *GetProductLogic) GetProduct(req *types.GetProductReq) (resp *types.GetP
 			Category:    category,
 		},
 	}
+	// 将数据写入redis
+	value, err := json.Marshal(resp)
+	l.svcCtx.RedisClient.SetexCtx(context.Background(), key, string(value), 60)
 	return
 }

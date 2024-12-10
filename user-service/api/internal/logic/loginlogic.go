@@ -30,7 +30,6 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
-	// todo: add your logic here and delete this line
 	email := req.Email
 	password := req.Password
 	userModel := model.NewGomallUserModel(l.svcCtx.Conn)
@@ -51,6 +50,12 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, biz.TokenError
 	}
+	key := l.svcCtx.Config.RedisPrefix + "token:" + res.Token
+	val, _ := l.svcCtx.RedisClient.Get(key)
+	if val != "" {
+		return &types.LoginResp{Token: res.Token}, nil
+	}
+
 	// 数据写入redis
 	err = l.svcCtx.RedisClient.SetexCtx(context.Background(), "token:"+res.Token, strconv.FormatInt(user.Id, 16), int(l.svcCtx.Config.RedisConfig.PingTimeout))
 	if err != nil {
