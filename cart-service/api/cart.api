@@ -1,0 +1,41 @@
+type (
+	CartItm {
+		product_id uint32 `json:"product_id"`
+		quantity   uint32 `json:"quantity"`
+	}
+	AddItemReq {
+		user_id uint32  `json:"user_id"`
+		item    CartItm `json:"item"`
+	}
+	AddIemResp {
+		message string `json:"message"`
+	}
+	EmptyCartReq {
+		user_id uint32 `json:"user_id"`
+	}
+	EmptyCartResp {
+		message string `json:"message"`
+	}
+	GetCartReq {
+		user_id uint32 `json:"user_id"`
+	}
+	GetCartResp {
+		cart Cart `json:"cart"`
+	}
+	Cart {
+		user_id uint32    `json:"user_id"`
+		items   []CartItm `json:"items"`
+	}
+)
+
+service Cart {
+	@handler AddCartItem
+	post /api/cart/addItem (AddItemReq) returns (AddIemResp)
+
+	@handler EmptyCart
+	post /api/cart/emptyCart (EmptyCartReq) returns (EmptyCartResp)
+
+	@handler GetCart
+	post /api/cart/getCart (GetCartReq) returns (GetCartResp)
+}
+
