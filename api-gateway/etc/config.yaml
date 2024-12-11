@@ -8,4 +8,8 @@ Routes:
     Path:
       - /api/user/login
       - /api/user/register
+  - ServiceName: product-api
+    Path:
+      - /api/product/list
+      - /api/product/get
         

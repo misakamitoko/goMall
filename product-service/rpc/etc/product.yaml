@@ -1,6 +1,17 @@
 Name: product.rpc
 ListenOn: 0.0.0.0:8080
+Mode: dev
 Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: product.rpc
+db:
+  dsn: "root:123456@tcp(127.0.0.1:3306)/gomall?charset=utf8mb4&parseTime=True&loc=Local"
+  connectTimeout: 10
+RedisConfig:
+  Host: "127.0.0.1:6379"
+  Type: "node"
+  NonBlock: false
+  Tls: false
+  PingTimeout: 1s
+RedisPrefix: "gomall-product:"

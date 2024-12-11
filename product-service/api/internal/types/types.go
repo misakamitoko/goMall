@@ -4,7 +4,7 @@
 package types
 
 type GetProductReq struct {
-	Id int64 `json:"id"`
+	Id uint32 `json:"id"`
 }
 
 type GetProductResp struct {
@@ -13,7 +13,7 @@ type GetProductResp struct {
 
 type ListProductReq struct {
 	Page     int32 `json:"page"`
-	PageSize int32 `json:"pageSize"`
+	PageSize int64 `json:"pageSize"`
 }
 
 type ListProductResp struct {
@@ -22,11 +22,11 @@ type ListProductResp struct {
 }
 
 type Product struct {
-	Id          int64    `json:"id"`
+	Id          uint32    `json:"id"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	Picture     string   `json:"picture"`
-	Price       float64  `json:"price"`
+	Price       float32  `json:"price"`
 	Category    []string `json:"category"`
 }
 

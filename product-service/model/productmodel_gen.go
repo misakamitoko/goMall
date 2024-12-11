@@ -28,7 +28,7 @@ type (
 		FindOne(ctx context.Context, id uint64) (*Product, error)
 		Update(ctx context.Context, data *Product) error
 		Delete(ctx context.Context, id uint64) error
-		ListProducts(ctx context.Context, page, pagesize int32) ([]Product, error)
+		ListProducts(ctx context.Context, page int32, pageSize int64) ([]*Product, error)
 	}
 
 	defaultProductModel struct {
@@ -37,12 +37,13 @@ type (
 	}
 
 	Product struct {
-		Id          uint64         `db:"id"`
+		Id          uint32         `db:"id"`
 		Name        string         `db:"name"`
 		Description sql.NullString `db:"description"`
 		Picture     sql.NullString `db:"picture"`
-		Price       float64        `db:"price"`
+		Price       float32        `db:"price"`
 		Categories  sql.NullString `db:"categories"`
+		Quantity    int64          `db:"quantity"`
 	}
 )
 
@@ -74,21 +75,21 @@ func (m *defaultProductModel) FindOne(ctx context.Context, id uint64) (*Product,
 }
 
 func (m *defaultProductModel) Insert(ctx context.Context, data *Product) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, productRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Id, data.Name, data.Description, data.Picture, data.Price, data.Categories)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, productRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.Id, data.Name, data.Description, data.Picture, data.Price, data.Categories, data.Quantity)
 	return ret, err
 }
 
 func (m *defaultProductModel) Update(ctx context.Context, data *Product) error {
 	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, productRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.Name, data.Description, data.Picture, data.Price, data.Categories, data.Id)
+	_, err := m.conn.ExecCtx(ctx, query, data.Name, data.Description, data.Picture, data.Price, data.Categories, data.Quantity, data.Id)
 	return err
 }
 
-func(m *defaultProductModel) ListProducts(ctx context.Context, page, pagesize int32) ([]Product, error) {
-	query := fmt.Sprintf("select %s from %s limit?,?", productRows, m.table)
-	var resp []Product
-	err := m.conn.QueryRowsCtx(ctx, &resp, query, page, pagesize)
+func (m *defaultProductModel) ListProducts(ctx context.Context, page int32, pageSize int64) ([]*Product, error) {
+	query := fmt.Sprintf("select %s from %s limit ?,?", productRows, m.table)
+	var resp []*Product
+	err := m.conn.QueryRowsCtx(ctx, &resp, query, page, pageSize)
 	switch err {
 	case nil:
 		return resp, nil

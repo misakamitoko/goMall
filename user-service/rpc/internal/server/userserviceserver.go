@@ -6,9 +6,9 @@ package server
 
 import (
 	"context"
-	logic2 "user-service/rpc/internal/logic"
-	"user-service/rpc/internal/svc"
 
+	"user-service/rpc/internal/logic"
+	"user-service/rpc/internal/svc"
 	"user-service/rpc/user"
 )
 
@@ -24,11 +24,11 @@ func NewUserServiceServer(svcCtx *svc.ServiceContext) *UserServiceServer {
 }
 
 func (s *UserServiceServer) Register(ctx context.Context, in *user.RegisterReq) (*user.RegisterResp, error) {
-	l := logic2.NewRegisterLogic(ctx, s.svcCtx)
+	l := logic.NewRegisterLogic(ctx, s.svcCtx)
 	return l.Register(in)
 }
 
 func (s *UserServiceServer) Login(ctx context.Context, in *user.LoginReq) (*user.LoginResp, error) {
-	l := logic2.NewLoginLogic(ctx, s.svcCtx)
+	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }

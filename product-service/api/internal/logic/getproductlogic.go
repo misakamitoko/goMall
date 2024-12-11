@@ -46,7 +46,7 @@ func (l *GetProductLogic) GetProduct(req *types.GetProductReq) (resp *types.GetP
 	}
 	resp = &types.GetProductResp{
 		Product: types.Product{
-			Id:          int64(product.Id),
+			Id:          product.Id,
 			Name:        product.Name,
 			Description: product.Description.String,
 			Picture:     product.Picture.String,

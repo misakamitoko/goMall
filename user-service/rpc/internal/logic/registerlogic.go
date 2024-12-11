@@ -2,8 +2,8 @@ package logic
 
 import (
 	"context"
-	"user-service/rpc/internal/svc"
 
+	"user-service/internal/svc"
 	"user-service/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -23,8 +23,8 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
-func (l *RegisterLogic) Register(in *user.RegisterResp) (*user.RegisterReq, error) {
+func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.RegisterResp, error) {
 	// todo: add your logic here and delete this line
 
-	return &user.RegisterReq{}, nil
+	return &user.RegisterResp{}, nil
 }

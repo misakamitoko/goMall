@@ -14,11 +14,11 @@ type (
 		Mobile string `json:"mobile"`
 	}
 	RegisterResp {
-		UserId int64 `json:"userId"`
+		UserId uint32 `json:"userId"`
 	}
 	//用户信息
 	UserInfoResponse {
-		Id     int64  `json:"id"`
+		Id     uint32  `json:"id"`
 		Name   string `json:"name"`
 		Gender int64  `json:"gender"`
 		Mobile string `json:"mobile"`

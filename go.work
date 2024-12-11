@@ -3,5 +3,7 @@ go 1.22.10
 use (
 	./api-gateway
 	./auth-service
+	./cart-service
+	./product-service
 	./user-service
 )

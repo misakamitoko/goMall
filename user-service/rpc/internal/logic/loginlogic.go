@@ -2,8 +2,8 @@ package logic
 
 import (
 	"context"
-	"user-service/rpc/internal/svc"
 
+	"user-service/internal/svc"
 	"user-service/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -23,8 +23,8 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 	}
 }
 
-func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginReq, error) {
+func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginResp, error) {
 	// todo: add your logic here and delete this line
 
-	return &user.LoginReq{}, nil
+	return &user.LoginResp{}, nil
 }

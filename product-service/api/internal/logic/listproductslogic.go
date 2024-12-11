@@ -40,7 +40,7 @@ func (l *ListProductsLogic) ListProducts(req *types.ListProductReq) (resp *types
 			return nil, err
 		}
 		typeProducts = append(typeProducts, types.Product{
-			Id:          int64(product.Id),
+			Id:          product.Id,
 			Name:        product.Name,
 			Description: product.Description.String,
 			Price:       product.Price,

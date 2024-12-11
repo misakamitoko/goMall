@@ -13,6 +13,7 @@ type Config struct {
 	}
 	DB          DB              `json:"DB"`
 	RedisConfig redis.RedisConf `json:"RedisConfig"`
+	RedisPrefix string          `json:"RedisPrefix"`
 	EtcdConfig  EtcdConfig      `json:"Etcd"`
 }
 
