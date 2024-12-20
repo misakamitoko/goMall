@@ -29,7 +29,9 @@ type (
 		FindOne(ctx context.Context, id int64) (*ShoppingCarts, error)
 		Update(ctx context.Context, data *ShoppingCarts) error
 		Delete(ctx context.Context, id int64) error
-		FindOneByUserId(ctx context.Context, userId uint64) (*ShoppingCarts, error)
+		FindOneByUserId(ctx context.Context, userId uint32) (*ShoppingCarts, error)
+		TransInsert(session sqlx.Session, data *ShoppingCarts) (sql.Result, error)
+		Trans(fn func(session sqlx.Session) error) error
 	}
 
 	defaultShoppingCartsModel struct {
@@ -44,6 +46,25 @@ type (
 		UpdatedAt time.Time `db:"updated_at"`
 	}
 )
+
+// 事务开启
+func(m *defaultShoppingCartsModel) Trans(fn func(session sqlx.Session)error) error{
+	err := m.conn.Transact(func(session sqlx.Session) error{
+		err := fn(session)
+		if err != nil{
+			return err
+		}
+		return nil
+	})
+	return err
+}
+
+
+func(m *defaultShoppingCartsModel) TransInsert(session sqlx.Session, data *ShoppingCarts) (sql.Result, error){
+	query := fmt.Sprintf("insert into %s (%s) values (?)", m.table, shoppingCartsRowsExpectAutoSet)
+	res, err := session.ExecCtx(context.Background(), query, data.UserId)
+	return res, err
+}
 
 func newShoppingCartsModel(conn sqlx.SqlConn) *defaultShoppingCartsModel {
 	return &defaultShoppingCartsModel{
@@ -72,7 +93,7 @@ func (m *defaultShoppingCartsModel) FindOne(ctx context.Context, id int64) (*Sho
 	}
 }
 
-func (m *defaultShoppingCartsModel) FindOneByUserId(ctx context.Context, userId uint64) (*ShoppingCarts, error){
+func (m *defaultShoppingCartsModel) FindOneByUserId(ctx context.Context, userId uint32) (*ShoppingCarts, error){
 	query := fmt.Sprintf("select %s from %s where `user_id` =? limit 1", shoppingCartsRows, m.table)
 	var resp ShoppingCarts
 	err := m.conn.QueryRowCtx(ctx, &resp, query, userId)

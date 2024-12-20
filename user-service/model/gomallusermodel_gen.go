@@ -38,7 +38,7 @@ type (
 	}
 
 	GomallUser struct {
-		Id          int64     `db:"id"`
+		Id          uint32     `db:"id"`
 		Name        string    `db:"name"`         // 用户名
 		Gender      int64     `db:"gender"`       // 用户性别
 		Mobile      string    `db:"mobile"`       // 电话号码

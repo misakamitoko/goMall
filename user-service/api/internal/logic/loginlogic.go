@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"net/http"
-	"strconv"
 	"user-service/model"
 
 	"user-service/api/biz"
@@ -46,7 +45,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if !biz.CheckPassWord(password, user.Password) {
 		return nil, biz.PasswordNotMathError
 	}
-	res, err := l.svcCtx.AuthRpc.DeliverTokenByRPC(l.ctx, &auth.DeliverTokenReq{UserId: int32(user.Id)})
+	res, err := l.svcCtx.AuthRpc.DeliverTokenByRPC(l.ctx, &auth.DeliverTokenReq{UserId: uint32(user.Id)})
 	if err != nil {
 		return nil, biz.TokenError
 	}
@@ -57,7 +56,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	}
 
 	// 数据写入redis
-	err = l.svcCtx.RedisClient.SetexCtx(context.Background(), "token:"+res.Token, strconv.FormatInt(user.Id, 16), int(l.svcCtx.Config.RedisConfig.PingTimeout))
+	err = l.svcCtx.RedisClient.SetexCtx(context.Background(), "token:"+res.Token, string(user.Id), int(l.svcCtx.Config.RedisConfig.PingTimeout))
 	if err != nil {
 		return nil, biz.RedisError
 	}

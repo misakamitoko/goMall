@@ -33,7 +33,7 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 		return nil, err
 	}
 	hashedPassword, err := biz.HashPassword(password)
-	if err!= nil {
+	if err != nil {
 		return nil, err
 	}
 	userModel := model.NewGomallUserModel(l.svcCtx.Conn)

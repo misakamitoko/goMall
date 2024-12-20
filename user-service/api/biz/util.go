@@ -7,7 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GenerateId() (int64, error) {
+func GenerateId() (uint32, error) {
 	// 定义 10^8 的最大值，用于生成随机数
 	max := new(big.Int).Exp(big.NewInt(10), big.NewInt(8), nil)
 
@@ -16,7 +16,7 @@ func GenerateId() (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return n.Int64(), nil
+	return uint32(n.Uint64()), nil
 }
 
 func HashPassword(password string) (string, error) {
