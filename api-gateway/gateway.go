@@ -7,6 +7,7 @@ import (
 	"api-gateway/internal/trie"
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/valyala/fasthttp"
 )
@@ -51,7 +52,7 @@ func (g *Gateway) ServeHttp(ctx *fasthttp.RequestCtx) {
 		ctx.SetStatusCode(fasthttp.StatusNotFound)
 		return
 	}
-	targetUri := service.GetOneNodeByParent(targetServer) + path
+	targetUri := service.GetOneNodeByParent(targetServer, strconv.FormatUint(ctx.ConnID(), 10)) + path
 
 	// RedirectReqeust
 	req := &ctx.Request

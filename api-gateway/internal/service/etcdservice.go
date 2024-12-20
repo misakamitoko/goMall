@@ -1,6 +1,7 @@
 package service
 
 import (
+	"api-gateway/internal/lb"
 	"api-gateway/internal/svc"
 	"context"
 	"log"
@@ -44,14 +45,13 @@ func NewEtcdService(c context.Context, l *svc.ServiceContext, key string) *EtcdS
 	return eService
 }
 
-func GetOneNodeByParent(serviceName string) string {
+func GetOneNodeByParent(serviceName string, connId string) string {
 	if serviceMap[serviceName] == nil {
 		logger.Error(
 			"Discovrey service first",
 		)
 		return ""
 	}
-	// TODO loadbalance
 	e := serviceMap[serviceName]
 	if e.Services == nil {
 		logger.Error(
@@ -59,7 +59,12 @@ func GetOneNodeByParent(serviceName string) string {
 			zap.String("serviceName", serviceName),
 		)
 	}
-	var endpoint string
+	var keys []string
+	for k, _ := range e.Services {
+		keys = append(keys, k)
+	}
+	// consistanthash
+	var endpoint string = lb.ConsistenHash(keys, connId)
 	for _, v := range e.Services {
 		endpoint = v
 	}
