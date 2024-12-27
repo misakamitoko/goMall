@@ -12,4 +12,9 @@ Routes:
     Path:
       - /api/product/list
       - /api/product/get
+  - ServiceName: cart-api
+    Path:
+      - /api/cart/addItem
+      - /api/cart/emptyCart
+      - /api/cart/getCart
         
