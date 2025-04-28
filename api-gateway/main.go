@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	assert(1 == 1)
 	var conf config.Config
 	config.LoadConfig(&conf, "etc/config.yaml")
 	fmt.Println(conf.Routes)
